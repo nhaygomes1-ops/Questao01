@@ -1,0 +1,207 @@
+
+import React, { useState } from 'react';
+
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  Keyboard
+} from 'react-native';
+
+export default function App() {
+
+  const [peso, setPeso] = useState('');
+  const [resultado, setResultado] = useState(null);
+
+  function calcularAgua() {
+
+    Keyboard.dismiss();
+
+    if (peso.trim() === '') {
+      Alert.alert(
+        'Atenção',
+        'Por favor, informe seu peso.'
+      );
+      setResultado(null);
+      return;
+    }
+
+  
+    const pesoNumerico = Number(
+      peso.trim().replace(',', '.')
+    );
+
+
+    if (!Number.isFinite(pesoNumerico) || pesoNumerico <= 0) {
+      Alert.alert(
+        'Valor inválido',
+        'Informe um peso maior que zero.'
+      );
+      setResultado(null);
+      return;
+    }
+
+    const agua = (pesoNumerico * 35) / 1000;
+    setResultado(agua.toFixed(2));
+  }
+
+  return (
+
+    <View style={styles.container}>
+
+      <Text style={styles.titulo}>
+        Calculadora de Hidratação
+      </Text>
+
+      <Text style={styles.subtitulo}>
+        Descubra sua estimativa de consumo diário de água!
+      </Text>
+
+      <View style={styles.card}>
+
+        <Text style={styles.label}>
+          Informe seu peso (kg):
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Exemplo: 70"
+          placeholderTextColor="#999"
+          keyboardType="decimal-pad"
+          value={peso}
+          onChangeText={(valor) => {
+            setPeso(valor);
+            setResultado(null);
+          }}
+        />
+
+        <View style={styles.botao}>
+          <Button
+            title="Calcular"
+            color="#087E8B"
+            onPress={calcularAgua}
+          />
+        </View>
+
+        {resultado !== null && (
+
+          <View style={styles.resultado}>
+
+            <Text style={styles.textoResultado}>
+              Seu consumo estimado é:
+            </Text>
+
+            <Text style={styles.valor}>
+              {resultado.replace('.', ',')} litros
+            </Text>
+
+            <Text style={styles.detalhe}>
+              de água por dia
+            </Text>
+
+          </View>
+
+        )}
+
+      </View>
+
+      <Text style={styles.rodape}>
+        Cálculo baseado em 35 mL por kg de peso.
+      </Text>
+
+    </View>
+
+  );
+}
+
+const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    backgroundColor: '#EAF7F8',
+    justifyContent: 'center',
+    padding: 25
+  },
+
+  titulo: {
+    fontSize: 27,
+    fontWeight: 'bold',
+    color: '#075B66',
+    textAlign: 'center',
+    marginBottom: 12
+  },
+
+  subtitulo: {
+    fontSize: 16,
+    color: '#52666A',
+    textAlign: 'center',
+    marginBottom: 30
+  },
+
+  card: {
+    backgroundColor: '#FFFFFF',
+    padding: 22,
+    borderRadius: 15,
+    elevation: 4
+  },
+
+  label: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#164E56',
+    marginBottom: 12
+  },
+
+  input: {
+    backgroundColor: '#F4FAFA',
+    borderWidth: 1,
+    borderColor: '#9CCDD1',
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 18,
+    marginBottom: 20,
+    color: '#164E56'
+  },
+
+  botao: {
+    borderRadius: 10,
+    overflow: 'hidden'
+  },
+
+  resultado: {
+    backgroundColor: '#EAF7F8',
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 25
+  },
+
+  textoResultado: {
+    fontSize: 16,
+    color: '#52666A'
+  },
+
+  valor: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#087E8B',
+    marginTop: 10
+  },
+
+  detalhe: {
+    fontSize: 16,
+    color: '#52666A',
+    marginTop: 5
+  },
+
+  rodape: {
+    fontSize: 13,
+    color: '#718589',
+    textAlign: 'center',
+    marginTop: 25
+  }
+
+});
